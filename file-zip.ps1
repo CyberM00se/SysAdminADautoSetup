@@ -4,3 +4,4 @@
 
 Remove-Item zip.zip  # Removes the current zip archive. 
 Compress-Archive -Path automation -DestinationPath zip.zip  # Creates the new zip archive to uplaod. 
+Read-Host ("Press any key to exit....")
