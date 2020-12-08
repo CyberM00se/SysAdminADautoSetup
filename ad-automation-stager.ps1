@@ -18,4 +18,4 @@ $process = Start-Process powershell -ArgumentList ("-ExecutionPolicy Bypass -nop
 $process.WaitForExit($waitTimeMilliseconds)
 
 Write-Host -NoNewLine 'Press any key to exit...';
-$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');  # This is for viewing errors. In future versions it should be removed.
