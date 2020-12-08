@@ -17,6 +17,9 @@ function scheduletask {
 
 scheduletask
 
-.\automation\install-adds.ps1
+Unblock-File -Path .\automation\install-adds.ps1
+powershell .\automation\install-adds.ps1
 
-Read-Host ("Press any key to contuinue....")
+Unblock-File -Path .\automation\configure-ad.ps1
+
+Read-Host ("Press any key to exit....")

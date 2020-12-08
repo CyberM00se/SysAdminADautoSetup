@@ -14,3 +14,4 @@ Write-Host "Done."
 Write-Host "Configuring ADDS and DNS"
 Install-ADDSForest -DomainName $domainName -InstallDNS
 Write-Host "Done."
+Read-Host ("Press any key to exit....")
