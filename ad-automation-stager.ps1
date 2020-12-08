@@ -21,3 +21,5 @@ function scheduletask {
 scheduletask
 
 .\automation\install-adds.ps1
+
+Read-Host ("Press any key to contuinue....")
