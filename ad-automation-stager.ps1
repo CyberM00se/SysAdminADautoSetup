@@ -14,7 +14,7 @@ $trigger = New-JobTrigger -AtStartup -RandomDelay 00:00:30
  Register-ScheduledJob -Trigger $trigger -FilePath "$currentPath\automation\configure-ad.ps1" -Name "AD Automation"  # Use Get-Job to see if job was complete.
 Unblock-File -Path .\automation\configure-ad.ps1
 
-$process = Start-Process powershell -ArgumentList ("-ExecutionPolicy Bypass -noninteractive -noprofile " + ".\automation\install-adds.ps1") -PassThru
+$process = Start-Process powershell -ArgumentList ("-ExecutionPolicy Bypass -noprofile " + ".\automation\install-adds.ps1") -PassThru
 $process.WaitForExit($waitTimeMilliseconds)
 
 Write-Host -NoNewLine 'Press any key to exit...';
