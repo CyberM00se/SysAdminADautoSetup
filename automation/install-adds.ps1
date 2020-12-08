@@ -6,12 +6,10 @@ $domainName = Read-Host "What would you like your domain name to be?: "
 Write-Host "Installing the ADDS..."
 Add-WindowsFeature AD-Domain-Services
 Write-Host "Done."
-Write-Host "Installing the ADDS Tools"  # This shit dont work.
-Add-WindowsCapability -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0 –Online
-Add-WindowsCapability -Name Rsat.GroupPolicy.Management.Tools~~~~0.0.1.0 –Online
-Add-WindowsCapability -Name Rsat.Dns.Tools~~~~0.0.1.0 –Online
+Write-Host "Installing the ADDS Tools"  # This shit dont work. Need to re add
 Write-Host "Done."
 Write-Host "Configuring ADDS and DNS"
 Install-ADDSForest -DomainName $domainName -InstallDNS
 Write-Host "Done."
-Read-Host ("Press any key to exit....")
+Write-Host -NoNewLine 'Press any key to exit...';
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');

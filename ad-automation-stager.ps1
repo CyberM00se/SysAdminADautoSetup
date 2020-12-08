@@ -17,4 +17,5 @@ Unblock-File -Path .\automation\configure-ad.ps1
 $process = Start-Process powershell -ArgumentList ("-ExecutionPolicy Bypass -noninteractive -noprofile " + ".\automation\install-adds.ps1") -PassThru
 $process.WaitForExit($waitTimeMilliseconds)
 
-Read-Host ("Press any key to exit....")
+Write-Host -NoNewLine 'Press any key to exit...';
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
