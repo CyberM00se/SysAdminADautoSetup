@@ -1,4 +1,4 @@
-# Script: ad-automation-stager.ps1
+# Script: automation-stager.ps1
 # Author: Dylan 'Chromosome' Navarro
 # Description: Downloads all the necessary files for AD automation and configures tasks to complete the process. 
 
