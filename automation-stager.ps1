@@ -11,7 +11,7 @@ Expand-Archive -Path zip.zip -DestinationPath .  # Uncompresses the archine in t
 Remove-Item -Path .\zip.zip  # Cleans up the current directory by removing the zip file. 
 
 $trigger = New-JobTrigger -AtStartup -RandomDelay 00:00:30
- Register-ScheduledJob -Trigger $trigger -FilePath "$currentPath\automation\configure-ad.ps1" -Name "AD Automation"  # Use Get-Job to see if job was complete.
+Register-ScheduledJob -Trigger $trigger -FilePath "$currentPath\automation\configure-ad.ps1" -Name "AD Automation"  # Use Get-Job to see if job was complete.
 Unblock-File -Path .\automation\configure-ad.ps1
 
 $process = Start-Process powershell -ArgumentList ("-ExecutionPolicy Bypass -noprofile " + ".\automation\install-adds.ps1") -PassThru

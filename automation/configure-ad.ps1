@@ -2,19 +2,53 @@
 # Author: Dylan 'Chromosome' Navarro
 # Description: Once a domain environment is set up this will create the proper OUs and import users if needed. 
 
+# These variables are used in 
+$DistinguishedName = (Get-AdDomain | Select-Object -Property "DistinguishedName").DistinguishedName
+$DNSRoot = (Get-AdDomain | Select-Object -Property "DNSRoot").DNSRoot
+$OUPath = "OU=" + $DNSRoot + "," + $DistinguishedName
+
 function OUStructure {
-    $DistinguishedName = (Get-AdDomain | Select-Object -Property "DistinguishedName").DistinguishedName
-    $DNSRoot = (Get-AdDomain | Select-Object -Property "DNSRoot").DNSRoot
+    # Creates the base OU for the rest to be nested underneath. 
     New-ADOrganizationalUnit -Name $DNSRoot -Path $DistinguishedName -ProtectedFromAccidentalDeletion $True -Description "Non-default AD objects go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "Users" -Path "OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "All user accounts should go in here. Made by PS script."
-    New-ADOrganizationalUnit -Name "StandardUsers" -Path "OU=Users,OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "Standard domain user accounts go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "AdminUsers" -Path "OU=Users,OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "Domain admins and other ADM users go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "ServiceAccounts" -Path "OU=Users,OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "Accounts for different services go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "Computers" -Path "OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "All Computer objects should go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "Workstations" -Path "OU=Computers,OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "All workstation computers should go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "Servers" -Path "OU=Computers,OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "All server systems should go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "Other" -Path "OU=Computers,OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "Other systems should go here. Made by PS script."
-    New-ADOrganizationalUnit -Name "Groups" -Path "OU=$DNSRoot,$DistinguishedName" -ProtectedFromAccidentalDeletion $True -Description "All security groups go here. Made by PS script."
+     # This is where you specify the OU structure you want to use. Eventually this will be changed to support CSV input. 
+    $ous = @{
+        ou1 = @{name = "Users"; path = "$OUPath"; protect = "$True"; description = "All user accounts should go in here. Made by PS script.";};
+        ou2 = @{name = "StandardUsers"; path = "OU=Users,$OUPath"; protect = "$True"; description = "Standard domain user accounts go here. Made by PS script.";};
+        ou3 = @{name = "AdminUsers"; path = "OU=Users,$OUPath"; protect = "$True"; description = "Domain admins and other ADM users go here. Made by PS script.";};
+        ou4 = @{name = "ServiceAccounts"; path = "OU=Users,$OUPath"; protect = "$True"; description = "Accounts for different services go here. Made by PS script.";};
+        ou5 = @{name = "Computers"; path = "$OUPath"; protect = "$True"; description = "All Computer objects should go here. Made by PS script.";};
+        ou6 = @{name = "Workstations"; path = "OU=Computers,$OUPath"; protect = "$True"; description = "All workstation computers should go here. Made by PS script.";};
+        ou7 = @{name = "Servers"; path = "OU=Computers,$OUPath"; protect = "$True"; description = "All server systems should go here. Made by PS script.";};
+        ou8 = @{name = "Other"; path = "OU=Computers,$OUPath"; protect = "$True"; description = "Other systems should go here. Made by PS script.";};
+        ou9 = @{name = "Groups"; path = "$OUPath"; protect = "$True"; description = "All security groups go here. Made by PS script.";};
+        ou10 = @{name = "InformationTechnology"; path = "OU=Groups,$OUPath"; protect = "$True"; description = "IT Security Groups. Made by PS script.";};
+    }
+    Foreach ($ou in $ous.keys) 
+    {
+        $selected_ou = $ous.$ou
+        New-ADOrganizationalUnit -Name $selected_ou.name -Path $selected_ou.path -ProtectedFromAccidentalDeletion $selected_ou.protect -Description $selected_ou.description
+    }
 }
 
-OUStructure
+function securitygroups {
+    # This is the OU where the groups should be saved to. 
+    $GroupPath = "OU=Groups,$OUPath"
+    # This is where you specify your security groups. Eventually this will be changed to support CSV input. 
+    $groups = @{
+        group1 = @{name = "Human Resources"; samname = "humanresources"; description = "Human Resources Group. Made by PS script."; path = "$GroupPath";};
+        group2 = @{name = "Sales"; samname = "sales"; description = "Sales Group. Made by PS script."; path = "$GroupPath";};
+        group3 = @{name = "Marketing"; samname = "marketing"; description = "Marketing Group. Made by PS script."; path = "$GroupPath";};
+        group4 = @{name = "Managmnet"; samname = "managmnet"; description = "Managment Group. Made by PS script."; path = "$GroupPath";};
+        group5 = @{name = "Server Admin"; samname = "serveradmin"; description = "Server Admin Group. Made by PS script."; path = "OU=InformationTechnology,$GroupPath";};
+        group6 = @{name = "Workstation Admin"; samname = "workstationadmin"; description = "Workstation Admin Group. Made by PS script."; path = "OU=InformationTechnology,$GroupPath";};
+        group7 = @{name = "Help Desk"; samname = "helpdesk"; description = "Help Desk Group. Made by PS script."; path = "OU=InformationTechnology,$GroupPath";};
+        group8 = @{name = "System Administrators"; samname = "systemadministrators"; description = "System Administrators Group. Made by PS script."; path = "OU=InformationTechnology,$GroupPath";};
+    }
+    ForEach ($hashtable in $groups.Keys)
+    {
+        $selected_hashtable = $groups.$hashtable
+        New-ADGroup -Name $selected_hashtable.name -SamAccountName $selected_hashtable.samname -GroupCategory Security -DisplayName $selected_hashtable.name -Description $selected_hashtable.description -Path $selected_hashtable.path
+    }
+}
+
+
