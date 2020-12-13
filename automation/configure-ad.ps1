@@ -52,3 +52,5 @@ function securitygroups {
 }
 
 
+OUStructure
+securitygroups
