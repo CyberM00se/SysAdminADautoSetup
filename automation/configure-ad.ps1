@@ -11,7 +11,7 @@ function OUStructure {
     # Creates the base OU for the rest to be nested underneath. 
     New-ADOrganizationalUnit -Name $DNSRoot -Path $DistinguishedName -ProtectedFromAccidentalDeletion $True -Description "Non-default AD objects go here. Made by PS script."
      # This is where you specify the OU structure you want to use. Eventually this will be changed to support CSV input. 
-    $ous = @{
+    $ous = [ordered]@{
         ouA = @{name = "Users"; path = "$OUPath"; protect = $True; description = "All user accounts should go in here. Made by PS script.";};
         ouB = @{name = "Computers"; path = "$OUPath"; protect = $True; description = "All Computer objects should go here. Made by PS script.";};
         ouC = @{name = "Groups"; path = "$OUPath"; protect = $True; description = "All security groups go here. Made by PS script.";};
@@ -34,7 +34,7 @@ function securitygroups {
     # This is the OU where the groups should be saved to. 
     $GroupPath = "OU=Groups,$OUPath"
     # This is where you specify your security groups. Eventually this will be changed to support CSV input. 
-    $groups = @{
+    $groups = [ordered]@{
         group1 = @{name = "Human Resources"; samname = "humanresources"; description = "Human Resources Group. Made by PS script."; path = "$GroupPath";};
         group2 = @{name = "Sales"; samname = "sales"; description = "Sales Group. Made by PS script."; path = "$GroupPath";};
         group3 = @{name = "Marketing"; samname = "marketing"; description = "Marketing Group. Made by PS script."; path = "$GroupPath";};
