@@ -12,16 +12,16 @@ function OUStructure {
     New-ADOrganizationalUnit -Name $DNSRoot -Path $DistinguishedName -ProtectedFromAccidentalDeletion $True -Description "Non-default AD objects go here. Made by PS script."
      # This is where you specify the OU structure you want to use. Eventually this will be changed to support CSV input. 
     $ous = @{
-        ou1 = @{name = "Users"; path = "$OUPath"; protect = "$True"; description = "All user accounts should go in here. Made by PS script.";};
-        ou2 = @{name = "StandardUsers"; path = "OU=Users,$OUPath"; protect = "$True"; description = "Standard domain user accounts go here. Made by PS script.";};
-        ou3 = @{name = "AdminUsers"; path = "OU=Users,$OUPath"; protect = "$True"; description = "Domain admins and other ADM users go here. Made by PS script.";};
-        ou4 = @{name = "ServiceAccounts"; path = "OU=Users,$OUPath"; protect = "$True"; description = "Accounts for different services go here. Made by PS script.";};
-        ou5 = @{name = "Computers"; path = "$OUPath"; protect = "$True"; description = "All Computer objects should go here. Made by PS script.";};
-        ou6 = @{name = "Workstations"; path = "OU=Computers,$OUPath"; protect = "$True"; description = "All workstation computers should go here. Made by PS script.";};
-        ou7 = @{name = "Servers"; path = "OU=Computers,$OUPath"; protect = "$True"; description = "All server systems should go here. Made by PS script.";};
-        ou8 = @{name = "Other"; path = "OU=Computers,$OUPath"; protect = "$True"; description = "Other systems should go here. Made by PS script.";};
-        ou9 = @{name = "Groups"; path = "$OUPath"; protect = "$True"; description = "All security groups go here. Made by PS script.";};
-        ou10 = @{name = "InformationTechnology"; path = "OU=Groups,$OUPath"; protect = "$True"; description = "IT Security Groups. Made by PS script.";};
+        ou1 = @{name = "Users"; path = "$OUPath"; protect = $True; description = "All user accounts should go in here. Made by PS script.";};
+        ou2 = @{name = "StandardUsers"; path = "OU=Users,$OUPath"; protect = $True; description = "Standard domain user accounts go here. Made by PS script.";};
+        ou3 = @{name = "AdminUsers"; path = "OU=Users,$OUPath"; protect = $True; description = "Domain admins and other ADM users go here. Made by PS script.";};
+        ou4 = @{name = "ServiceAccounts"; path = "OU=Users,$OUPath"; protect = $True; description = "Accounts for different services go here. Made by PS script.";};
+        ou5 = @{name = "Computers"; path = "$OUPath"; protect = $True; description = "All Computer objects should go here. Made by PS script.";};
+        ou6 = @{name = "Workstations"; path = "OU=Computers,$OUPath"; protect = $True; description = "All workstation computers should go here. Made by PS script.";};
+        ou7 = @{name = "Servers"; path = "OU=Computers,$OUPath"; protect = $True; description = "All server systems should go here. Made by PS script.";};
+        ou8 = @{name = "Other"; path = "OU=Computers,$OUPath"; protect = $True; description = "Other systems should go here. Made by PS script.";};
+        ou9 = @{name = "Groups"; path = "$OUPath"; protect = $True; description = "All security groups go here. Made by PS script.";};
+        ou10 = @{name = "InformationTechnology"; path = "OU=Groups,$OUPath"; protect = $True; description = "IT Security Groups. Made by PS script.";};
     }
     Foreach ($ou in $ous.keys) 
     {
@@ -47,7 +47,7 @@ function securitygroups {
     ForEach ($hashtable in $groups.Keys)
     {
         $selected_hashtable = $groups.$hashtable
-        New-ADGroup -Name $selected_hashtable.name -SamAccountName $selected_hashtable.samname -GroupCategory Security -DisplayName $selected_hashtable.name -Description $selected_hashtable.description -Path $selected_hashtable.path
+        New-ADGroup -Name $selected_hashtable.name -SamAccountName $selected_hashtable.samname -GroupCategory Security -GroupScope Global -DisplayName $selected_hashtable.name -Description $selected_hashtable.description -Path $selected_hashtable.path
     }
 }
 
