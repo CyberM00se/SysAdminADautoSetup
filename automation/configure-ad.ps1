@@ -34,7 +34,7 @@ function securitygroups {
     # This is the OU where the groups should be saved to. 
     $GroupPath = "OU=Groups,$OUPath"
     # This is where you specify your security groups. Eventually this will be changed to support CSV input. 
-    $groups = @{
+    $groups = [ordered]@{
         group1 = @{name = "Human Resources"; samname = "humanresources"; description = "Human Resources Group. Made by PS script."; path = "$GroupPath";};
         group2 = @{name = "Sales"; samname = "sales"; description = "Sales Group. Made by PS script."; path = "$GroupPath";};
         group3 = @{name = "Marketing"; samname = "marketing"; description = "Marketing Group. Made by PS script."; path = "$GroupPath";};
@@ -54,7 +54,7 @@ function securitygroups {
 function addusers {
     $defaultPass = "ChangeMe!"  # The default password for all users made with this script. 
     $UserPath ="OU=Users,$OUPath"  # Where all user accounts should be stored in the OU structure.
-    $userlist = @{
+    $userlist = [ordered]@{
         user1 = @{uname = "dnavarro-sysadm"; dname = "Dylan SysAdmin"; email = "mail@corp.net"; description = "Sys Admin Account"; path = "OU=AdminUsers,$UserPath"; groups = @{group0 = "serveradmin";group2 = "systemadministrators";};};
         user2 = @{uname = "dnavarro-hdt"; dname = "Dylan Help Deks"; email = "mail@corp.net"; description = "Help Desk Account"; path = "OU=AdminUsers,$UserPath"; groups = @{group0 = "workstationadmin";group2 = "helpdesk";};};
         user3 = @{uname = "dnavarro-marketing"; dname = "Marketing Dylan"; email = "mail@corp.net"; description = "Marketing Person"; path = "OU=StandardUsers,$UserPath"; groups = @{group0 = "marketing";};};
@@ -65,8 +65,8 @@ function addusers {
     ForEach ($user in $userlist.Keys) # Just changed all .Keys to capital k in case that breaks stuff.
     {
         $selected_user = $userlist.$user
-        New-ADUser -ChangePasswordAtLogon $True -Enabled $True -SamAccountName $selected_user.uname -Name $selected_user.uname -DisplayName $selected_user.dname -EmailAddress $selected_user.email -Description $selected_user.description -Path $selected_user.path
-        Set-ADAccountPassword $selected_user.uname -NewPassword (ConvertTo-SecureString -AsPlainText $defaultPass -Force)
+        # -AccountPassword (ConvertTo-SecureString -AsPlainText $defaultPass -Force)
+        New-ADUser -ChangePasswordAtLogon $True -Enabled $True -SamAccountName $selected_user.uname -Name $selected_user.uname -DisplayName $selected_user.dname -EmailAddress $selected_user.email -Description $selected_user.description -Path $selected_user.path -AccountPassword (ConvertTo-SecureString -AsPlainText $defaultPass -Force)
         Foreach ($group in $selected_user.groups.Keys)
         {
             $selected_group = $selected_user.groups.$group
