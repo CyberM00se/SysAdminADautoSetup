@@ -70,7 +70,7 @@ function addusers {
         Foreach ($group in $selected_user.groups.Keys)
         {
             $selected_group = $selected_user.groups.$group
-            Add-ADGroupMember - Identity  $selected_group -Members $selected_user.uname
+            Add-ADGroupMember -Identity  $selected_group -Members $selected_user.uname
         }
     }
 }
