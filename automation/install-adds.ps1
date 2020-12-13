@@ -13,3 +13,4 @@ Install-ADDSForest -DomainName $domainName -InstallDNS -Force
 Write-Host "Done."
 Write-Host -NoNewLine 'Press any key to exit...';
 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');  # These two lines are for errors. If a weak password is provided it will messup the script so this lets you view the error.
+# If there is no error they system will automatically reboot and the user will not need to provide any input. 
