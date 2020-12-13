@@ -4,9 +4,7 @@
 
 $domainName = Read-Host "What would you like your domain name to be?: "
 Write-Host "Installing the ADDS..."
-Add-WindowsFeature AD-Domain-Services
-Write-Host "Done."
-Write-Host "Installing the ADDS Tools"  # This shit dont work. Need to re add
+Add-WindowsFeature AD-Domain-Services -IncludeManagementTools
 Write-Host "Done."
 Write-Host "Configuring ADDS and DNS"
 Install-ADDSForest -DomainName $domainName -InstallDNS -Force
