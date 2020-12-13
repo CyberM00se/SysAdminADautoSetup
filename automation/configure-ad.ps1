@@ -23,7 +23,7 @@ function OUStructure {
         ouI = @{name = "Other"; path = "OU=Computers,$OUPath"; protect = $True; description = "Other systems should go here. Made by PS script.";};
         ouJ = @{name = "InformationTechnology"; path = "OU=Groups,$OUPath"; protect = $True; description = "IT Security Groups. Made by PS script.";};
     }
-    Foreach ($ou in $ous.keys) 
+    Foreach ($ou in $ous.Keys) 
     {
         $selected_ou = $ous.$ou
         New-ADOrganizationalUnit -Name $selected_ou.name -Path $selected_ou.path -ProtectedFromAccidentalDeletion $selected_ou.protect -Description $selected_ou.description
@@ -34,7 +34,7 @@ function securitygroups {
     # This is the OU where the groups should be saved to. 
     $GroupPath = "OU=Groups,$OUPath"
     # This is where you specify your security groups. Eventually this will be changed to support CSV input. 
-    $groups = [ordered]@{
+    $groups = @{
         group1 = @{name = "Human Resources"; samname = "humanresources"; description = "Human Resources Group. Made by PS script."; path = "$GroupPath";};
         group2 = @{name = "Sales"; samname = "sales"; description = "Sales Group. Made by PS script."; path = "$GroupPath";};
         group3 = @{name = "Marketing"; samname = "marketing"; description = "Marketing Group. Made by PS script."; path = "$GroupPath";};
@@ -44,16 +44,39 @@ function securitygroups {
         group7 = @{name = "Help Desk"; samname = "helpdesk"; description = "Help Desk Group. Made by PS script."; path = "OU=InformationTechnology,$GroupPath";};
         group8 = @{name = "System Administrators"; samname = "systemadministrators"; description = "System Administrators Group. Made by PS script."; path = "OU=InformationTechnology,$GroupPath";};
     }
-    ForEach ($hashtable in $groups.Keys)
+    ForEach ($group in $groups.Keys)
     {
-        $selected_hashtable = $groups.$hashtable
-        New-ADGroup -Name $selected_hashtable.name -SamAccountName $selected_hashtable.samname -GroupCategory Security -GroupScope Global -DisplayName $selected_hashtable.name -Description $selected_hashtable.description -Path $selected_hashtable.path
+        $selected_group = $groups.$group
+        New-ADGroup -Name $selected_group.name -SamAccountName $selected_group.samname -GroupCategory Security -GroupScope Global -DisplayName $selected_group.name -Description $selected_group.description -Path $selected_group.path
     }
 }
 
+function addusers {
+    $defaultPass = "ChangeMe!"  # The default password for all users made with this script. 
+    $UserPath ="OU=Users,$OUPath"  # Where all user accounts should be stored in the OU structure.
+    $userlist = @{
+        user1 = @{uname = "dnavarro-sysadm"; dname = "Dylan SysAdmin"; email = "mail@corp.net"; description = "Sys Admin Account"; path = "OU=AdminUsers,$UserPath"; groups = @{group0 = "serveradmin";group2 = "systemadministrators";};};
+        user2 = @{uname = "dnavarro-hdt"; dname = "Dylan Help Deks"; email = "mail@corp.net"; description = "Help Desk Account"; path = "OU=AdminUsers,$UserPath"; groups = @{group0 = "workstationadmin";group2 = "helpdesk";};};
+        user3 = @{uname = "dnavarro-marketing"; dname = "Marketing Dylan"; email = "mail@corp.net"; description = "Marketing Person"; path = "OU=StandardUsers,$UserPath"; groups = @{group0 = "marketing";};};
+        user4 = @{uname = "dnavarro-sales"; dname = "Sales Dylan"; email = "mail@corp.net"; description = "Sales Person"; path = "OU=StandardUsers,$UserPath"; groups = @{group0 = "sales";};};
+        user5 = @{uname = "dnavarro-hr"; dname = "HR Dylan"; email = "mail@corp.net"; description = "HR Person"; path = "OU=StandardUsers,$UserPath"; groups = @{group0 = "humanresources";};};
+        user8 = @{uname = "dnavarro-man"; dname = "Manager Dylan"; email = "mail@corp.net"; description = "Manager Person"; path = "OU=StandardUsers,$UserPath"; groups = @{group0 = "managmnet";};};
+    }
+    ForEach ($user in $userlist.Keys) # Just changed all .Keys to capital k in case that breaks stuff.
+    {
+        $selected_user = $userlist.$user
+        New-ADUser -ChangePasswordAtLogon $True -Enabled $True -SamAccountName $selected_user.uname -Name $selected_user.uname -DisplayName $selected_user.dname -EmailAddress $selected_user.email -Description $selected_user.description -Path $selected_user.path
+        Set-ADAccountPassword $selected_user.uname -NewPassword (ConvertTo-SecureString -AsPlainText $defaultPass -Force)
+        Foreach ($group in $selected_user.groups.Keys)
+        {
+            $selected_group = $selected_user.groups.$group
+            Add-ADGroupMember - Identity  $selected_group -Members $selected_user.uname
+        }
+    }
+}
 
-# Add Users
 # Create Loging GPOs
 
 OUStructure
 securitygroups
+addusers
