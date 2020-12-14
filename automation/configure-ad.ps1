@@ -76,9 +76,11 @@ function addusers {
 }
 
 function dnsreverslookupzone {
-    $ip = Get-NetIPAddress -InterfaceAlias "Ehternet0" -AddressFamily IPv4
-    $subnet = (Get-NetIPAddress -InterfaceAlias "Ehternet0" -AddressFamily IPv4 | Select-Object PrefixLength).PrefixLength
-    Add-DnsServerPrimaryZone -NetworkID "$ip/$subnet" -ReplicationScope "Forest"
+    $ip = (Get-NetIPAddress -InterfaceAlias "Ethernet0" -AddressFamily IPv4 | Select-Object IPAddress).IPAddress
+    $subnet = (Get-NetIPAddress -InterfaceAlias "Ethernet0" -AddressFamily IPv4 | Select-Object PrefixLength).PrefixLength
+    $iplen = $ip.Length - 1
+    $netID = $ip.Substring(0, $iplen) + "0/$subnet"
+    Add-DnsServerPrimaryZone -NetworkID $netID -ReplicationScope "Forest"
 }
 
 OUStructure
