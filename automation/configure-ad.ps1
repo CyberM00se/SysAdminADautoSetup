@@ -75,8 +75,13 @@ function addusers {
     }
 }
 
-# Create Loging GPOs
+function dnsreverslookupzone {
+    $ip = Get-NetIPAddress -InterfaceAlias "Ehternet0" -AddressFamily IPv4
+    $subnet = (Get-NetIPAddress -InterfaceAlias "Ehternet0" -AddressFamily IPv4 | Select-Object PrefixLength).PrefixLength
+    Add-DnsServerPrimaryZone -NetworkID "$ip/$subnet" -ReplicationScope "Forest"
+}
 
 OUStructure
 securitygroups
 addusers
+dnsreverslookupzone
