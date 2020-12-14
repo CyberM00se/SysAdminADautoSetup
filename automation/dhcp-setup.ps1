@@ -49,4 +49,7 @@ Write-Output "Authorizing DHCP Server"
 #authorize the dhcp server for ad network
 Add-DhcpServerInDC $env:COMPUTERNAME $localIP
 
+Write-Host -NoNewLine 'Press any key to exit...';
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+
 #endregion
