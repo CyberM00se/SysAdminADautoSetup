@@ -2,8 +2,7 @@
 # Author: Dylan 'Chromosome' Navarro
 # Description: Downloads all the necessary files for AD automation and configures tasks to complete the process. 
 
-# This will need to be changed from the development branch once testing is complete.
-$file2download = "https://raw.githubusercontent.com/CyPH3RSkULL5/SysAdminADautoSetup/dylan-development/zip.zip"
+$file2download = "https://github.com/CyPH3RSkULL5/SysAdminADautoSetup/raw/main/zip.zip"
 $currentPath = (Get-Location).path
 
 (New-Object System.Net.WebClient).DownloadFile($file2download,"zip.zip")  # Downloads the ZIP archive from the repo. 
