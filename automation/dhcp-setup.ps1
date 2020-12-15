@@ -30,7 +30,7 @@ Restart-Service dhcpserver
 #add input section here for start and end range
 
 Write-Output "Setting DHCP Scope"
-Add-DhcpServerv4Scope -ComputerName $env:COMPUTERNAME -Name "testDhcpscope" -StartRange 10.0.1.1 -EndRange 10.0.1.100 -SubnetMask 255.255.255.0 -LeaseDuration 8:0:0:0
+Add-DhcpServerv4Scope -Name "DHCP Scope" -StartRange 10.0.1.1 -EndRange 10.0.1.100 -SubnetMask 255.255.255.0 -LeaseDuration 8:0:0:0
 
 #get the default gateway
 $myDefaultGateway = 10.0.1.1 #Get-NetIPConfiguration | foreach IPv4DefaultGateway
@@ -50,7 +50,7 @@ Set-DhcpServerv4Optionvalue -computername $env:COMPUTERNAME -Router $myDefaultGa
 
 Write-Output "Authorizing DHCP Server"
 #authorize the dhcp server for ad network
-Add-DhcpServerInDC -DnsName $hostname -IPAddress 10.0.1.2
+Add-DhcpServerInDC -DnsName "noah.beckman" -IPAddress 10.0.1.2
 
 Write-Host -NoNewLine 'Press any key to exit...';
 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
