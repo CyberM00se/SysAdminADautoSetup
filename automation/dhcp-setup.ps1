@@ -33,13 +33,13 @@ Write-Output "Setting DHCP Scope"
 Add-DhcpServerv4Scope -ComputerName $env:COMPUTERNAME -Name "testDhcpscope" -StartRange 10.0.1.10 -EndRange 10.0.2.100 -SubnetMask 255.255.255.0 -LeaseDuration 8:0:0:0
 
 #get the default gateway
-$myDefaultGateway = Get-NetIPConfiguration | foreach IPv4DefaultGateway
+$myDefaultGateway = 10.0.1.1 #Get-NetIPConfiguration | foreach IPv4DefaultGateway
 
 #get the domain name
 $myDomainName = (Get-WmiObject Win32_ComputerSystem).Domain
 
 #get the local machines Ip address
-$localIP = (Get-NetIPAddress -InterfaceAlias Ethernet -AddressFamily IPv4).IPAddress
+$localIP = 10.0.1.2
 
 Write-Output "Setting DHCP Settings"
 #set the dhcp settings
