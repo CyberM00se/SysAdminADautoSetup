@@ -22,6 +22,11 @@ netsh dhcp add securitygroups
 Write-Output "Restarting DHCP Service"
 Restart-Service dhcpserver
 
+
+Write-Output "Authorizing DHCP Server"
+#authorize the dhcp server for ad network
+Add-DhcpServerInDC -DnsName "noah.beckman" -IPAddress 10.0.1.2
+
 #endregion
 
 #region Add Scope
@@ -41,16 +46,16 @@ $myDomainName = (Get-WmiObject Win32_ComputerSystem).Domain
 #get the local machines Ip address
 $localIP = 10.0.1.2
 
-$DNSRoot = (Get-AdDomain | Select-Object -Property "DNSRoot").DNSRoot
-$hostname = hostname + ".$DNSRoot"
+#$DNSRoot = (Get-AdDomain | Select-Object -Property "DNSRoot").DNSRoot
+#$hostname = hostname + ".$DNSRoot"
 
 Write-Output "Setting DHCP Settings"
 #set the dhcp settings
 Set-DhcpServerv4Optionvalue -computername $env:COMPUTERNAME -Router $myDefaultGateway -DnsServer 127.0.0.1 -DnsDomain "$myDomainName"
 
-Write-Output "Authorizing DHCP Server"
-#authorize the dhcp server for ad network
-Add-DhcpServerInDC -DnsName "noah.beckman" -IPAddress 10.0.1.2
+#Write-Output "Authorizing DHCP Server"
+##authorize the dhcp server for ad network
+#Add-DhcpServerInDC -DnsName "noah.beckman" -IPAddress 10.0.1.2
 
 Write-Host -NoNewLine 'Press any key to exit...';
 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
