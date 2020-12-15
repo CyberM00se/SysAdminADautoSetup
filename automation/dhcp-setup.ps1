@@ -30,7 +30,7 @@ Restart-Service dhcpserver
 #add input section here for start and end range
 
 Write-Output "Setting DHCP Scope"
-Add-DhcpServerv4Scope -ComputerName $env:COMPUTERNAME -Name "testDhcpscope" -StartRange 10.0.1.10 -EndRange 10.0.2.100 -SubnetMask 255.255.255.0 -LeaseDuration 8:0:0:0
+Add-DhcpServerv4Scope -ComputerName $env:COMPUTERNAME -Name "testDhcpscope" -StartRange 10.0.1.10 -EndRange 10.0.1.100 -SubnetMask 255.255.255.0 -LeaseDuration 8:0:0:0
 
 #get the default gateway
 $myDefaultGateway = 10.0.1.1 #Get-NetIPConfiguration | foreach IPv4DefaultGateway
