@@ -3,11 +3,12 @@
 # Description: This script is designed to install and configure the Active Directory Domain Services role on a Windows Server.
 
 $domainName = Read-Host "What would you like your domain name to be?: "
+$netbiosName = Read-Host "What would you like your NetBIOS name to be?: "
 Write-Host "Installing the ADDS..."
 Add-WindowsFeature AD-Domain-Services -IncludeManagementTools
 Write-Host "Done."
 Write-Host "Configuring ADDS and DNS"
-Install-ADDSForest -DomainName $domainName -InstallDNS -Force
+Install-ADDSForest -DomainName $domainName -DomainNetbiosName $netbiosName -InstallDNS -Force
 Write-Host "Done."
 Write-Host -NoNewLine 'Press any key to exit...';
 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');  # These two lines are for errors. If a weak password is provided it will messup the script so this lets you view the error.
